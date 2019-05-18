@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.gms.maps.GoogleMap;
-
+ 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-
 
 //import it.duccius.download.RetriveAsyncFile;
 

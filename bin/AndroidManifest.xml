@@ -2,8 +2,8 @@
 
  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.duccius.pay.visitin.catania_it"
-    android:versionCode="40"
-    android:versionName="00.01.40" >
+    android:versionCode="41"
+    android:versionName="00.01.41" >
     
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -18,9 +18,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <uses-sdk android:minSdkVersion="11" />
-    <uses-sdk android:targetSdkVersion ="26" />
-
+    <!-- <uses-sdk android:minSdkVersion="11" />
+    <uses-sdk android:targetSdkVersion ="26" /> -->
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion ="26" />
+ 
           <application
           android:icon="@drawable/ic_launcher"
         android:label="VisitIn Catania" 

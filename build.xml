@@ -76,8 +76,8 @@
 	<property name="key.alias.password"	value="123456"/> 	
 	<property name="resource.package.file.name"	value="VisitInSiena.apk"/> 
 	<property name="app.package.name"     		value="it.duccius.musicplayer"/>
-	<property name="app.versioncode" 				value="40"/>
-	<property name="app.versionname" 				value="00.01.40"/>
+	<property name="app.versioncode" 				value="41"/>
+	<property name="app.versionname" 				value="00.01.41"/>
 	<property name="app.icon"        				value="siena_ita"/>
 	<property name="app.label"        			value="VisitIn Siena"/>
 	<property name="app.API_KEY"        			value="AIzaSyCubgNLCBkM6M2LZtOYKx7huCgy5FxmZ6Y"/>  
@@ -97,8 +97,8 @@
 	
 	<property name="resource.package.file.name"	value="VisitInCatania_ita.apk"/> 
 	<property name="app.package.name"     		value="it.duccius.visitin.catania"/> 
-	<property name="app.versioncode" 				value="40"/>
-	<property name="app.versionname" 				value="00.01.40"/>
+	<property name="app.versioncode" 				value="41"/>
+	<property name="app.versionname" 				value="00.01.41"/>
 	<property name="app.icon"        				value="ic_launcher"/>
 	<property name="app.label"        			value="VisitIn Catania"/>
 	<property name="app.API_KEY"        			value="AIzaSyCubgNLCBkM6M2LZtOYKx7huCgy5FxmZ6Y"/>
@@ -118,8 +118,8 @@
 	<property name="key.alias.password"	value="123456"/> 
 	
 	<property name="app.package.name"     		value="it.duccius.visitin.catania_en"/> 
-	<property name="app.versioncode" 				value="40"/>
-	<property name="app.versionname" 				value="00.01.40"/>
+	<property name="app.versioncode" 				value="41"/>
+	<property name="app.versionname" 				value="00.01.41"/>
 	<property name="app.icon"        				value="ic_launcher"/>
 	<property name="app.label"        			value="VisitIn Catania"/>
 	<property name="app.API_KEY"        			value="AIzaSyCubgNLCBkM6M2LZtOYKx7huCgy5FxmZ6Y"/>
@@ -139,8 +139,8 @@
 	
 	<property name="resource.package.file.name"	value="VisitInCatania_eng_pay.apk"/> 
 	<property name="app.package.name"     		value="it.duccius.pay.visitin.catania_en"/> 
-	<property name="app.versioncode" 				value="40"/>
-	<property name="app.versionname" 				value="00.01.40"/>
+	<property name="app.versioncode" 				value="41"/>
+	<property name="app.versionname" 				value="00.01.41"/>
 	<property name="app.icon"        				value="ic_launcher"/>
 	<property name="app.label"        			value="VisitIn Catania"/>
 	<property name="app.API_KEY"        			value="AIzaSyCOqjww0-4xs9GPrghEAR6hU-LDUSuwbPc"/>
@@ -160,8 +160,8 @@
 	
 	<property name="resource.package.file.name"	value="VisitInCatania_ita_pay.apk"/> 
 	<property name="app.package.name"     		value="it.duccius.pay.visitin.catania_it"/> 
-	<property name="app.versioncode" 				value="40"/>
-	<property name="app.versionname" 				value="00.01.40"/>
+	<property name="app.versioncode" 				value="41"/>
+	<property name="app.versionname" 				value="00.01.41"/>
 	<property name="app.icon"        				value="ic_launcher"/>
 	<property name="app.label"        			value="VisitIn Catania"/>
 	<property name="app.API_KEY"        			value="AIzaSyCOqjww0-4xs9GPrghEAR6hU-LDUSuwbPc"/>

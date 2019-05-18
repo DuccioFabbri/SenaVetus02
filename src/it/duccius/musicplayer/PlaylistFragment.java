@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-
 // http://javatechig.com/android/android-dialog-fragment-example
 
 public class PlaylistFragment extends ListFragment implements 

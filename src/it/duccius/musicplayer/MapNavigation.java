@@ -1,6 +1,6 @@
 package it.duccius.musicplayer;
 
-import android.support.v4.widget.DrawerLayout;
+//import android.support.v4.widget.DrawerLayout;
 
 import it.duccius.download.DownloadFile;
 import it.duccius.download.DownloadMode;
@@ -18,13 +18,14 @@ import it.duccius.maps.Placemark;
 import it.duccius.maps.Trail;
 import it.duccius.maps.TrailColor;
 import it.duccius.pay.visitin.catania_it.R;
-
+ 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Arrays;
 import java.util.Random;
 
 import android.view.LayoutInflater;
@@ -77,7 +78,17 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+// Per Android 6 che richiede le autorizzazioni ogni volta
+// https://developer.here.com/documentation/android-starter/dev_guide/topics/request-android-permissions.html
+// https://developer.android.com/training/permissions/requesting.html
+import android.content.pm.PackageManager;
+//https://stackoverflow.com/questions/14870596/android-annotation-cannot-be-resolved
+// Occorre aggiungere C:\eclipse-ADT\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\annotations\android-support-annotations.jar ai jar esterni del progetto
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.Manifest;
+ 
 public class MapNavigation extends Activity  implements OnCompletionListener, 
 														SeekBar.OnSeekBarChangeListener, 
 														LocationListener,
@@ -87,6 +98,23 @@ public class MapNavigation extends Activity  implements OnCompletionListener,
 														OnDownloadListEndedListner{
 
 	ProgressDialog progressDialog;
+	
+	/**
+	 * permissions request code
+	 */
+	private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+
+	/**
+	 * Permissions that need to be explicitly requested from end user.
+	 */
+	private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+    
+	    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+	    Manifest.permission.ACCESS_FINE_LOCATION,
+	    Manifest.permission.ACCESS_COARSE_LOCATION	      
+	
+	};
+	boolean _authorized = false;
 	
 	GoogleMap mMap;
 	//int _mapType = GoogleMap.MAP_TYPE_HYBRID;
@@ -181,6 +209,60 @@ public class MapNavigation extends Activity  implements OnCompletionListener,
 	
 	private ArrayList<Polyline> _activePolines = new ArrayList<Polyline>();
     
+	//----------------------------------------------------
+	// https://developer.here.com/documentation/android-starter/dev_guide/topics/request-android-permissions.html
+	// https://inthecheesefactory.com/blog/things-you-need-to-know-about-android-m-permission-developer-edition/en
+	//----------------------------------------------------
+	/**
+	 * Checks the dynamically-controlled permissions and requests missing permissions from end user.
+	 */
+	protected void checkPermissions() {
+	  final List<String> missingPermissions = new ArrayList<String>();
+	  // check all required dynamic permissions
+	  for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+	    final int result = checkSelfPermission(permission);
+		//final int result = ContextCompat.checkSelfPermission(this, permission);
+	     
+	    if (result != PackageManager.PERMISSION_GRANTED) {
+	      missingPermissions.add(permission);
+	    } 
+	  }
+	  if (!missingPermissions.isEmpty()) {
+	    // request all missing permissions
+	    final String[] permissions = missingPermissions
+	        .toArray(new String[missingPermissions.size()]);
+	    requestPermissions( permissions, REQUEST_CODE_ASK_PERMISSIONS);
+	  } else {
+	    final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
+	    Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+	    onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
+	        grantResults);
+	  }
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+	    @NonNull int[] grantResults) {
+	  switch (requestCode) {
+	    case REQUEST_CODE_ASK_PERMISSIONS:
+	      for (int index = permissions.length - 1; index >= 0; --index) {
+	        if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+	          // exit the app if one permission is not granted
+	          Toast.makeText(this, "Required permission '" + permissions[index]
+	              + "' not granted, exiting", Toast.LENGTH_LONG).show();
+	          finish();
+	          return;
+	        }
+	      }
+	      // all permissions were granted
+	      //initialize();
+	      _authorized = true;
+	      setupActivity();
+	      break;
+	  }
+	}
+	//----------------------------------------------------
+	
 	public boolean isOnline() {
 	    ConnectivityManager cm =
 	        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -318,6 +400,18 @@ public class MapNavigation extends Activity  implements OnCompletionListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		checkPermissions();
+
+	  
+		//###############################	    
+	    
+
+	    
+	    //setupActivity();
+		
+	}
+
+	private void setupActivity() {
 		//getActionBar().setTitle("SenaVetus");
 		getActionBar().setTitle(R.string.app_title);
 		
@@ -331,31 +425,16 @@ public class MapNavigation extends Activity  implements OnCompletionListener,
 		//SharedPreferences settings = getSharedPreferences("SenaVetus", 0);  		
 		
 	    songManager = new SongsManager(_language);		
-	  
-		//###############################	    
-	    
 		// getAudioGuideList(): recupera downloads.xml e contestualmente scarico gli .mp3 nuovi, valorizzando:
 		// - _localAudioGuideListLang:	elenco di audioguide presenti nella scheda SD per una determinata lingua
 		// - _audioGuideListLang:		elenco di audioguide disponibili sul server per una determinata lingua
 		// - _audioToDownloadLang:		elenco di audioguide presenti sul server ma non presenti su SD per una determinata lingua_audioToDownloadLang, _guides, _audioGuideListLang, _localAudioGuideListLang
 	    // - _nDs
 	    // - _trails
-	    
-	    getCurrentLocation();			    
+		getCurrentLocation();			    
 		getViewElwments();
 		
-		if (!getAudioGuideList())
-		{
-			Toast.makeText(getApplicationContext(), "Impossibile connettersi al server. Verificare la connessione.", Toast.LENGTH_LONG).show();
-			// Questo bottone dovrebbe visualizzare l'elenco dei poi da scaricare. Ma ho deciso di non usare questa feature e scaricare gli audio solo 
-			// facendo click sulla mappa.
-			btnPOIinfo.setVisibility(View.INVISIBLE);
-			//Dato che non ho la lista dei POI, non visualizzo i pulsanti relativi all'elenco per il play dei poi 
-			btnPlaylist.setVisibility(View.INVISIBLE);
-			// Non visualizzo neppure i perecorsi
-			btnTrails.setVisibility(View.INVISIBLE);
-			//return;
-		}
+		setupAudioGuideButtons();
 			
 		
 		closeSplash();
@@ -515,7 +594,21 @@ public class MapNavigation extends Activity  implements OnCompletionListener,
 				showPlaylist();
 			}
 		});
-		
+	}
+
+	private void setupAudioGuideButtons() {
+		if (!getAudioGuideList())
+		{
+			Toast.makeText(getApplicationContext(), "Impossibile connettersi al server. Verificare la connessione.", Toast.LENGTH_LONG).show();
+			// Questo bottone dovrebbe visualizzare l'elenco dei poi da scaricare. Ma ho deciso di non usare questa feature e scaricare gli audio solo 
+			// facendo click sulla mappa.
+			btnPOIinfo.setVisibility(View.INVISIBLE);
+			//Dato che non ho la lista dei POI, non visualizzo i pulsanti relativi all'elenco per il play dei poi 
+			btnPlaylist.setVisibility(View.INVISIBLE);
+			// Non visualizzo neppure i perecorsi
+			btnTrails.setVisibility(View.INVISIBLE);
+			//return;
+		}
 	}
 
 	private void showDownloadList()
@@ -1321,10 +1414,13 @@ private void addTrail() {
 	@Override
 	 public void onDestroy(){
 	 super.onDestroy();
-	 	_locationManager.removeUpdates(MapNavigation.this);
-	    mp.release();
-	    // http://stackoverflow.com/questions/13854196/application-force-closed-when-exited-android
-	    mHandler.removeCallbacks(mUpdateTimeTask);
+	 	if(_authorized){
+	 		_locationManager.removeUpdates(MapNavigation.this);
+	 		mp.release();
+	 		// http://stackoverflow.com/questions/13854196/application-force-closed-when-exited-android
+		 	mHandler.removeCallbacks(mUpdateTimeTask);
+	 	}
+	 	
 	 }
 
 	/**
@@ -1368,7 +1464,9 @@ private void addTrail() {
 	  @Override
 	  protected void onResume() {
 	    super.onResume();
-	    _locationManager.requestLocationUpdates(provider, 400, 1, this);
+	   // _locationManager.requestLocationUpdates(provider, 400, 1, this);
+	    if(_authorized)
+	    	_locationManager.requestLocationUpdates(provider, 400, 1, this);
 	  }
 	  
 	  @Override
